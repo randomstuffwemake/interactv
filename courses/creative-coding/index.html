@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Creative Coding & Computational Design | Interactv</title>
+<meta name="description" content="A design-technology programme for colleges and universities. Students learn computational thinking, generative systems, interaction and creative technology through making.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5f6fb;--panel:#fff;--ink:#141a3c;--muted:#555b7c;--rule:#d9dcec;
+  --accent:#ffbd3f;--cobalt:#3550ff;--warm:#fff0cc;--band:#141a3c;
+  --band-ink:#eef0fb;--band-muted:#aab0d8;--band-rule:#2e376b;
+  --font:"Bricolage Grotesque",system-ui,sans-serif;--mono:"JetBrains Mono",monospace;
+  --maxw:1160px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:18px;line-height:1.55}
+.wrap{width:min(var(--maxw),calc(100% - 40px));margin:auto}
+h1,h2,h3{margin:0;font-weight:800}
+h1{font-size:clamp(58px,10vw,140px);line-height:.88;letter-spacing:-.035em;max-width:9em}
+h2{font-size:clamp(38px,6vw,76px);line-height:.94;letter-spacing:-.025em;max-width:13em}
+h3{font-size:clamp(22px,2.5vw,30px);line-height:1.05}
+p{margin:0 0 1em}.lead{font-size:clamp(19px,2vw,23px);color:var(--muted);max-width:42em}
+section{padding:clamp(70px,9vw,120px) 0}
+.eyebrow{font:700 13px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--cobalt);margin-bottom:22px}
+.hero{padding:90px 0 100px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:520px;height:520px;border-radius:50%;right:-180px;top:70px;background:radial-gradient(circle,#ffbd3f 0 10%,rgba(255,189,63,.35) 11% 25%,transparent 26%);opacity:.8}
+.hero .wrap{position:relative;z-index:1}
+.hero-sub{font-size:clamp(21px,2.4vw,29px);max-width:760px;margin:32px 0 12px}
+.hero-note{color:var(--muted);max-width:720px}
+.btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 23px;border-radius:999px;border:1.5px solid transparent;font:700 16px var(--font);text-decoration:none;cursor:pointer}
+.btn-dark{background:var(--ink);color:#fff}.btn-line{border-color:#9da2c0;color:var(--ink);background:transparent}.btn-accent{background:var(--accent);color:var(--ink)}
+.band{background:var(--band);color:var(--band-ink)}
+.band .lead{color:var(--band-muted)}
+.intro-grid,.three,.two{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px}
+.two{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:24px;padding:28px}
+.card p,.card li{color:var(--muted)}
+.band .card{background:#1b2350;border-color:var(--band-rule)}
+.band .card p,.band .card li{color:var(--band-muted)}
+.card .num{font:700 13px var(--mono);color:var(--cobalt);margin-bottom:34px}.band .num{color:var(--accent)}
+.play{margin-top:42px;background:#0a0d24;border-radius:24px;padding:20px}
+.play-grid{display:grid;grid-template-columns:1.55fr .85fr;gap:18px}
+canvas{display:block;width:100%;height:410px;border-radius:18px;background:#f5f6fb}
+.code{border-radius:18px;background:#05071a;color:#e8eafb;padding:20px;overflow:auto;font:13px/1.75 var(--mono);min-height:410px}
+.code .k{color:#ffbd3f}.code .v{color:#8ee0b0}
+.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:18px}
+.control{border-top:1px solid var(--band-rule);padding-top:14px}.control label{display:flex;justify-content:space-between;font-weight:700;font-size:15px}.control output{font:13px var(--mono);color:var(--accent)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.options{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.opt{border:1px solid var(--band-rule);background:transparent;color:var(--band-ink);border-radius:999px;padding:8px 12px;cursor:pointer}.opt.active{background:var(--accent);color:var(--ink);border-color:var(--accent)}
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin-top:42px;border-top:1px solid var(--band-rule);border-bottom:1px solid var(--band-rule)}
+.flow div{padding:25px 14px;border-right:1px solid var(--band-rule);font-weight:800}.flow div:last-child{border-right:0}.flow small{display:block;font:12px var(--mono);color:var(--band-muted);margin-bottom:8px}
+.concepts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:42px}
+.concept{background:#fff;border:1px solid var(--rule);border-radius:18px;padding:22px}.concept b{display:block;font-size:20px;margin-bottom:8px}.concept span{color:var(--muted);font-size:16px}
+.path{border-top:3px solid var(--ink);padding-top:18px}.path .duration{font:700 13px var(--mono);color:var(--cobalt)}.path ul{padding-left:20px;color:var(--muted)}
+.section-head{display:flex;justify-content:space-between;gap:40px;align-items:end}.section-head .lead{max-width:500px}
+.list{list-style:none;margin:36px 0 0;padding:0;border-bottom:1px solid var(--rule)}
+.list li{display:grid;grid-template-columns:1fr 2fr;gap:30px;padding:19px 0;border-top:1px solid var(--rule)}.list b{font-size:20px}.list span{color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:42px}.step{border-top:3px solid var(--accent);padding-top:18px}
+.faq{max-width:850px;margin-top:40px}.faq details{border-top:1px solid var(--rule);padding:20px 0}.faq summary{font-weight:700;font-size:21px;cursor:pointer}.faq p{color:var(--muted);margin:14px 0 0;max-width:700px}
+.cta{background:var(--accent);color:var(--ink)}.cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px}.form{background:#fff;border-radius:24px;padding:28px}.field{margin-bottom:14px}.field label{display:block;font-size:14px;font-weight:700;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid #9297b5;border-radius:10px;font:inherit}.field textarea{min-height:100px}
+@media(max-width:900px){.play-grid,.cta-grid,.two{grid-template-columns:1fr}.three,.intro-grid,.steps{grid-template-columns:1fr}.concepts{grid-template-columns:repeat(2,1fr)}.controls{grid-template-columns:repeat(2,1fr)}.flow{grid-template-columns:repeat(3,1fr)}.flow div:nth-child(3){border-right:0}.section-head{display:block}}
+@media(max-width:620px){.wrap{width:calc(100% - 32px)}h1{font-size:clamp(52px,17vw,90px)}.concepts{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr}.flow div{border-right:0;border-bottom:1px solid var(--band-rule)}.list li{grid-template-columns:1fr;gap:5px}}
+
+/* Project visual examples */
+.project-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:48px}
+.project-card{background:var(--panel);border:1px solid var(--rule);border-radius:24px;overflow:hidden}
+.visual{height:300px;position:relative;overflow:hidden;background:#eef0fb}
+.project-copy{padding:25px 28px 30px}
+.project-copy p{color:var(--muted);margin-top:10px}
+.project-kicker{font:700 11px var(--mono);letter-spacing:.08em;color:var(--cobalt);margin-bottom:9px}
+.visual-poster{background:#141a3c}
+.poster-grid{position:absolute;inset:0;background:linear-gradient(90deg,transparent 48%,rgba(255,255,255,.1) 49%,transparent 50%),linear-gradient(transparent 48%,rgba(255,255,255,.1) 49%,transparent 50%);background-size:42px 42px;animation:posterMove 7s linear infinite}
+.poster-circle{position:absolute;width:190px;height:190px;border-radius:50%;background:var(--accent);left:18%;top:18%;box-shadow:90px 65px 0 #3550ff;animation:posterFloat 4s ease-in-out infinite alternate}
+.poster-type{position:absolute;right:7%;bottom:9%;font:700 24px/.95 var(--font);color:#fff;letter-spacing:-.03em;text-align:right}
+.visual-type{background:var(--accent);display:grid;place-items:center}
+.type-word{font:800 clamp(54px,8vw,95px)/.8 var(--font);letter-spacing:-.07em;color:var(--ink);transform:skew(-8deg);animation:typeMove 2.5s ease-in-out infinite alternate}
+.type-word span{color:var(--cobalt);display:inline-block;animation:typeBounce 1.4s ease-in-out infinite}
+.type-cursor{position:absolute;width:3px;height:115px;background:var(--ink);right:25%;animation:cursorBlink .9s steps(2) infinite}
+.visual-data{background:#fff}
+.data-bars{position:absolute;inset:28px 32px 35px;display:flex;align-items:end;gap:9px}
+.data-bars i{display:block;flex:1;background:var(--cobalt);height:35%;transform-origin:bottom;animation:dataPulse 2s ease-in-out infinite}
+.data-bars i:nth-child(2n){background:var(--ink);animation-delay:-.5s}
+.data-bars i:nth-child(3n){background:var(--accent);animation-delay:-1s}
+.data-bars i:nth-child(2){height:65%}.data-bars i:nth-child(4){height:48%}.data-bars i:nth-child(6){height:82%}.data-bars i:nth-child(8){height:58%}.data-bars i:nth-child(10){height:76%}
+.data-line{position:absolute;left:30px;right:30px;bottom:45px;height:2px;background:var(--ink);transform:rotate(-8deg);transform-origin:left;opacity:.6}
+.visual-audio{background:#3550ff;display:flex;align-items:center;justify-content:center;padding:30px}
+.audio-bars{width:85%;height:75%;display:flex;align-items:center;gap:6px}
+.audio-bars i{flex:1;height:25%;background:#eef0fb;border-radius:5px;animation:audio 1.1s ease-in-out infinite}
+.audio-bars i:nth-child(2n){background:var(--accent)}
+.audio-bars i:nth-child(3n){animation-delay:-.3s}.audio-bars i:nth-child(4n){animation-delay:-.6s}
+.visual-camera{background:#141a3c}
+.camera-ring{position:absolute;width:190px;height:190px;border:2px solid var(--accent);border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);animation:cameraScan 3s linear infinite}
+.camera-dot{position:absolute;width:24px;height:24px;border-radius:50%;background:var(--accent);left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 35px var(--accent)}
+.camera-cross{position:absolute;inset:22%;border:1px solid rgba(238,240,251,.35)}
+.visual-install{background:#0a0d24}
+.install-wall{position:absolute;width:72%;height:70%;left:14%;top:9%;border:2px solid #3550ff;box-shadow:inset 0 0 40px rgba(53,80,255,.25)}
+.install-floor{position:absolute;left:0;right:0;bottom:0;height:24%;background:linear-gradient(170deg,transparent 48%,#1b2350 49%)}
+.install-person{position:absolute;width:28px;height:70px;background:#eef0fb;border-radius:14px 14px 5px 5px;left:28%;bottom:12%;transform:rotate(-4deg)}
+.install-person:before{content:"";position:absolute;width:30px;height:30px;border-radius:50%;background:#eef0fb;top:-25px;left:-1px}
+.install-glow{position:absolute;width:95px;height:95px;border-radius:50%;background:var(--accent);right:25%;top:28%;filter:blur(10px);animation:installGlow 2.4s ease-in-out infinite alternate}
+@keyframes posterMove{to{background-position:42px 42px}}@keyframes posterFloat{to{transform:translate(18px,-12px) rotate(12deg)}}@keyframes typeMove{to{transform:skew(8deg) translateX(10px)}}@keyframes typeBounce{50%{transform:translateY(-15px) rotate(8deg)}}@keyframes cursorBlink{50%{opacity:.15}}@keyframes dataPulse{50%{transform:scaleY(.7)}}@keyframes audio{0%,100%{height:20%}50%{height:85%}}@keyframes cameraScan{to{transform:translate(-50%,-50%) rotate(360deg)}}@keyframes installGlow{to{transform:scale(1.3);opacity:.65}}
+@media(max-width:620px){
+  body{font-size:16px;overflow-x:hidden} section{padding:58px 0}.hero{padding:62px 0 70px}
+  .hero:after{width:280px;height:280px;right:-145px;top:120px;opacity:.55}
+  .hero-sub{font-size:20px;line-height:1.4;margin-top:24px}.hero-note{font-size:16px}
+  .btn-row{display:grid;grid-template-columns:1fr;gap:10px}.btn{width:100%;min-height:48px}
+  h2{font-size:clamp(36px,11vw,54px)}.lead{font-size:18px;line-height:1.5}.wrap{width:calc(100% - 28px)}
+  .project-grid{grid-template-columns:1fr;gap:16px}.visual{height:230px}.project-copy{padding:21px 20px 24px}
+  .play{padding:10px;border-radius:18px}.play-grid{gap:10px}.code{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+
+</style>
+</head>
+<body>
+
+<section class="hero">
+<div class="wrap">
+<div class="eyebrow">DESIGN TECHNOLOGY PROGRAMME · INTERACTV</div>
+<h1>Creative Coding &amp; Computational Design</h1>
+<p class="hero-sub">A design-technology programme that helps students use computation, interaction and generative systems as creative tools.</p>
+<p class="hero-note">Designed for design colleges, universities and creative education programmes. No prior programming experience is required.</p>
+<div class="btn-row">
+<a class="btn btn-dark" href="#enquire">Request Programme Details</a>
+<a class="btn btn-line" href="#experience">Explore the Learning Experience ↓</a>
+<a class="btn btn-line" href="#curriculum-download">Download Curriculum PDF</a>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="eyebrow">01 · WHAT IS CREATIVE CODING?</div>
+<h2>Code can be a creative material.</h2>
+<p class="lead">Creative coding is the use of programming as part of the creative process — allowing designers to create visual systems, motion, interaction, generative graphics and digital experiences.</p>
+<p class="lead">Students do not learn coding simply to become programmers. They learn computational thinking so they can translate design ideas into rules, systems and behaviours.</p>
+<div class="three">
+<div class="card"><div class="num">01</div><h3>Idea → Algorithm</h3><p>Break a visual or interactive idea into clear steps, relationships and rules.</p></div>
+<div class="card"><div class="num">02</div><h3>Algorithm → System</h3><p>Use repetition, variables, conditions and parameters to build systems that can generate and change.</p></div>
+<div class="card"><div class="num">03</div><h3>System → Experience</h3><p>Connect computation with interaction, data, sound, movement and digital media.</p></div>
+</div>
+</div>
+</section>
+
+
+
+<section id="experience" class="band" style="padding-top:20px">
+<div class="wrap">
+<div class="eyebrow">03 · EXPERIENCE THE TEACHING METHOD</div>
+<h2>Change a rule. Change the whole system.</h2>
+<p class="lead">Start with one simple visual rule. Change a parameter and watch the entire system respond.</p>
+<div class="play">
+<div class="play-grid">
+<canvas id="canvas"></canvas>
+<pre class="code"><span class="k">const</span> shape = <span class="v" id="codeShape">"circle"</span>;
+<span class="k">const</span> scale = <span class="v" id="codeScale">24</span>;
+<span class="k">const</span> spacing = <span class="v" id="codeSpacing">60</span>;
+<span class="k">const</span> rotation = <span class="v" id="codeRotation">0</span>;
+
+<span class="k">for</span> (let row = 0; row &lt; rows; row++) {
+  <span class="k">for</span> (let col = 0; col &lt; cols; col++) {
+    draw(shape,
+      col * spacing,
+      row * spacing,
+      scale,
+      rotation
+    );
+  }
+}</pre>
+</div>
+<div class="controls">
+<div class="control"><label>Scale <output id="scaleOut">24</output></label><input id="scale" type="range" min="8" max="45" value="24"></div>
+<div class="control"><label>Spacing <output id="spacingOut">60</output></label><input id="spacing" type="range" min="35" max="100" value="60"></div>
+<div class="control"><label>Rotation <output id="rotationOut">0°</output></label><input id="rotation" type="range" min="0" max="180" value="0"></div>
+<div class="control"><label>Pattern</label><div class="options"><button class="opt active" data-pattern="grid">Grid</button><button class="opt" data-pattern="diagonal">Diagonal</button><button class="opt" data-pattern="radial">Radial</button></div></div>
+</div>
+<div class="controls" style="margin-top:8px">
+<div class="control" style="grid-column:span 4"><label>Shape</label><div class="options"><button class="opt active" data-shape="circle">Circle</button><button class="opt" data-shape="square">Square</button><button class="opt" data-shape="triangle">Triangle</button><button class="opt" data-shape="hexagon">Hexagon</button></div></div>
+</div>
+</div>
+<div class="flow">
+<div><small>01</small>ONE SHAPE</div><div><small>02</small>REPETITION</div><div><small>03</small>PARAMETERS</div><div><small>04</small>RULES</div><div><small>05</small>SYSTEM</div><div><small>06</small>INTERACTION</div>
+</div>
+</div>
+</section>
+
+<section class="band">
+<div class="wrap">
+<div class="eyebrow">04 · WHY INSTITUTIONS INTRODUCE IT</div>
+<h2>A practical bridge between design and technology.</h2>
+<div class="three">
+<div class="card"><div class="num">01</div><h3>Future-ready skills</h3><p>Introduce computational and emerging technology skills without turning the programme into a computer science curriculum.</p></div>
+<div class="card"><div class="num">02</div><h3>Studio-based learning</h3><p>Students learn through experimentation, making, critique and iteration.</p></div>
+<div class="card"><div class="num">03</div><h3>Portfolio outcomes</h3><p>Students finish with working interactive and generative projects that can become portfolio pieces.</p></div>
+</div>
+</div>
+</section>
+
+
+
+
+<section id="projects">
+<div class="wrap">
+<div class="eyebrow">05 · WHAT STUDENTS CREATE</div>
+<div class="section-head">
+<h2>Every concept becomes something.</h2>
+<p class="lead">Students learn through visible outcomes — from generative graphics and typography to sound, camera interaction and interactive installations.</p>
+</div>
+<div class="project-grid">
+<article class="project-card"><div class="visual visual-poster"><div class="poster-grid"></div><div class="poster-circle"></div><div class="poster-type">GENERATE<br>VARIATIONS</div></div><div class="project-copy"><div class="project-kicker">01 · GENERATIVE GRAPHICS</div><h3>Generative Poster</h3><p>Build a visual system where code creates many compositions from the same design rules.</p></div></article>
+<article class="project-card"><div class="visual visual-type"><div class="type-word">TYPE<span>!</span></div><div class="type-cursor"></div></div><div class="project-copy"><div class="project-kicker">02 · TYPOGRAPHY + MOTION</div><h3>Interactive Typography</h3><p>Create letters that move, respond to input and behave like an interactive visual system.</p></div></article>
+<article class="project-card"><div class="visual visual-data"><div class="data-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="data-line"></div></div><div class="project-copy"><div class="project-kicker">03 · DATA</div><h3>Data as a Creative Material</h3><p>Turn information into an expressive visual story rather than a conventional chart.</p></div></article>
+<article class="project-card"><div class="visual visual-audio"><div class="audio-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="project-copy"><div class="project-kicker">04 · SOUND</div><h3>Audio Visualiser</h3><p>Use sound or music input to create graphics that respond to rhythm and amplitude.</p></div></article>
+<article class="project-card"><div class="visual visual-camera"><div class="camera-ring"></div><div class="camera-dot"></div><div class="camera-cross"></div></div><div class="project-copy"><div class="project-kicker">05 · COMPUTER VISION</div><h3>Camera Interaction</h3><p>Explore creative experiences driven by movement, video and computer vision.</p></div></article>
+<article class="project-card"><div class="visual visual-install"><div class="install-floor"></div><div class="install-wall"></div><div class="install-person"></div><div class="install-glow"></div></div><div class="project-copy"><div class="project-kicker">06 · EXPERIENCE DESIGN</div><h3>Interactive Installation</h3><p>Combine visuals, interaction and physical space into an experience designed for an audience.</p></div></article>
+</div>
+</div>
+</section>
+
+<section class="band">
+<div class="wrap">
+<div class="eyebrow">06 · PROGRAMME FIT</div>
+<h2>Where does it fit?</h2>
+<p class="lead">The programme is especially relevant to design disciplines where visual communication, interaction, motion and digital media intersect.</p>
+<div class="list">
+<li><b>Animation &amp; Motion Design</b><span>Procedural movement, timing, rhythm and generative animation.</span></li>
+<li><b>Interaction Design &amp; UI/UX</b><span>Behaviours, states, feedback and interactive prototypes beyond static screens.</span></li>
+<li><b>Communication &amp; Visual Design</b><span>Generative identities, posters, typography and visual systems.</span></li>
+<li><b>Digital Media &amp; Game Design</b><span>Rules, feedback loops, real-time interaction and creative digital systems.</span></li>
+</div>
+</div>
+</section>
+
+<section class="band-warm" style="background:var(--warm)">
+<div class="wrap">
+<div class="eyebrow">07 · DELIVERY FORMATS</div>
+<h2>Choose the format that fits your curriculum.</h2>
+<div class="three">
+<div class="path"><div class="duration">02 DAYS · WORKSHOP</div><h3>Introduction</h3><p>Visual experiments, computational thinking and a first interactive/generative piece.</p><ul><li>Rules and variables</li><li>Loops and patterns</li><li>Interaction</li><li>Build, show and critique</li></ul></div>
+<div class="path"><div class="duration">06 WEEKS · MODULE</div><h3>Structured module</h3><p>A practical introduction to creative coding and computational design.</p><ul><li>Generative systems</li><li>Typography and motion</li><li>Data</li><li>Portfolio project</li></ul></div>
+<div class="path"><div class="duration">14 WEEKS · SEMESTER</div><h3>Full studio programme</h3><p>Foundations, systems, interaction, extensions and a capstone.</p><ul><li>Three core projects</li><li>Sound/camera/sensors</li><li>Capstone</li><li>Portfolio documentation</li></ul></div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="eyebrow">08 · WHAT INTERACTV PROVIDES</div>
+<h2>A programme, not just a workshop.</h2>
+<div class="three">
+<div class="card"><h3>Curriculum</h3><ul><li>Session plans</li><li>Learning objectives</li><li>Project briefs</li><li>Starter files</li><li>Teaching resources</li></ul></div>
+<div class="card"><h3>Teaching</h3><ul><li>Interactv-led sessions</li><li>Co-teaching</li><li>Technical support</li><li>Faculty training</li><li>Project critiques</li></ul></div>
+<div class="card"><h3>Assessment</h3><ul><li>Assignment briefs</li><li>Evaluation framework</li><li>Project rubrics</li><li>Portfolio documentation</li><li>Outcome mapping</li></ul></div>
+</div>
+</div>
+</section>
+
+<section class="band">
+<div class="wrap">
+<div class="eyebrow">09 · DELIVERY MODELS</div>
+<h2>Work with your institution in the way that fits.</h2>
+<div class="three">
+<div class="card"><div class="num">01</div><h3>We teach it</h3><p>Interactv runs the programme while faculty participate in the studio and critiques.</p></div>
+<div class="card"><div class="num">02</div><h3>We co-teach it</h3><p>Interactv handles technology while your faculty lead design context and academic critique.</p></div>
+<div class="card"><div class="num">03</div><h3>We enable your faculty</h3><p>Training and a teaching kit help your team run the programme independently.</p></div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="eyebrow">10 · TOOLS &amp; INFRASTRUCTURE</div>
+<h2>Start simple. Progress into real creative technology.</h2>
+<div class="two">
+<div class="card"><h3>Learning progression</h3><p><b>Algorithmic thinking</b> → Scratch / Blockly / Code.org → <b>Creative coding</b> → JavaScript / p5.js → <b>Interactive media</b> → Web APIs / MediaPipe → <b>Physical &amp; immersive</b> → Arduino / sensors / projection.</p></div>
+<div class="card"><h3>What the institution needs</h3><p>Core activities require laptops or lab computers, a modern browser and internet access. Advanced modules can add webcams, microphones, microcontrollers, sensors and projection.</p></div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="eyebrow">11 · LEARNING OUTCOMES &amp; ASSESSMENT</div>
+<h2>What students can do by the end.</h2>
+<div class="two">
+<div><ul class="list"><li><b>Translate</b><span>Turn a design concept into computational rules.</span></li><li><b>Generate</b><span>Build systems that produce many outcomes from one idea.</span></li><li><b>Interact</b><span>Create prototypes responding to input, sound, data or movement.</span></li><li><b>Debug</b><span>Read, modify and debug creative code.</span></li><li><b>Critique</b><span>Discuss computational work using design and technical evidence.</span></li><li><b>Present</b><span>Document and present portfolio-ready work.</span></li></ul></div>
+<div class="card"><h3>Assessment can be mapped to your framework.</h3><p>Suggested areas:</p><div class="steps"><div class="step"><b>Concept</b><p>Idea and design reasoning</p></div><div class="step"><b>Logic</b><p>Computational thinking</p></div><div class="step"><b>Craft</b><p>Visual, interaction and presentation</p></div></div><p style="margin-top:24px;color:var(--muted)">Weighting and deliverables can be adapted to the institution's existing academic framework.</p></div>
+</div>
+</div>
+</section>
+
+<section id="curriculum-download" class="band-warm" style="background:var(--warm)">
+<div class="wrap cta-grid">
+<div>
+<div class="eyebrow" style="color:var(--ink)">12 · DOWNLOAD THE CURRICULUM</div>
+<h2>See the complete curriculum.</h2>
+<p class="lead" style="color:#3a3a4e">Download the Creative Coding &amp; Computational Design curriculum PDF, including the 15 core concepts, learning progression and programme structure.</p>
+<p style="color:#3a3a4e">Enter your details and the curriculum will become available to download.</p>
+</div>
+<form class="form" id="curriculumForm">
+<div class="field"><label for="curr-name">Name</label><input id="curr-name" name="name" required></div>
+<div class="field"><label for="curr-institution">Institution</label><input id="curr-institution" name="institution" required></div>
+<div class="field"><label for="curr-email">Email</label><input id="curr-email" name="email" type="email" required></div>
+<button class="btn btn-dark" type="submit" style="width:100%">Download Curriculum PDF</button>
+<p id="curriculumStatus" style="margin:12px 0 0;color:var(--muted);font-size:14px"></p>
+</form>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="eyebrow">13 · FAQ</div>
+<h2>Common questions.</h2>
+<div class="faq">
+<details><summary>Do students need to know how to code?</summary><p>No. The programme can begin with visual and algorithmic thinking before introducing professional programming tools.</p></details>
+<details><summary>Do faculty need coding experience?</summary><p>No. Interactv can teach, co-teach or train faculty depending on the institution's preferred delivery model.</p></details>
+<details><summary>Can this fit into an existing course?</summary><p>Yes. It can be delivered as a workshop, elective, module, studio component or semester programme.</p></details>
+<details><summary>What infrastructure is required?</summary><p>Core activities require computers and a modern browser. Advanced activities can introduce cameras, audio, microcontrollers, sensors and projection.</p></details>
+<details><summary>Can the curriculum be customised?</summary><p>Yes. Duration, projects, tools and assessment can be adapted to the institution's programme structure.</p></details>
+</div>
+</div>
+</section>
+
+<section class="cta" id="enquire">
+<div class="wrap cta-grid">
+<div>
+<div class="eyebrow" style="color:var(--ink)">14 · LET'S TALK</div>
+<h2>Bring creative technology into your curriculum.</h2>
+<p class="lead" style="color:#3a3a4e">Tell us about your programme, student cohort and academic format. We'll help you identify a suitable delivery model.</p>
+</div>
+<form class="form" onsubmit="event.preventDefault();alert('Connect this form to your preferred Interactv lead channel.');">
+<div class="field"><label>Name</label><input required></div>
+<div class="field"><label>Institution</label><input required></div>
+<div class="field"><label>Role</label><select><option>Professor / Faculty</option><option>Head of Department</option><option>Programme Coordinator</option><option>Dean / Academic Leadership</option><option>Other</option></select></div>
+<div class="field"><label>Format</label><select><option>2-Day Workshop</option><option>6-Week Module</option><option>14-Week Semester</option><option>Faculty Training</option><option>Not sure yet</option></select></div>
+<div class="field"><label>Message</label><textarea></textarea></div>
+<button class="btn btn-dark" style="width:100%">Request Programme Details</button>
+</form>
+</div>
+</section>
+
+<script>
+document.getElementById('curriculumForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const email = document.getElementById('curr-email').value.trim();
+  const status = document.getElementById('curriculumStatus');
+  if(!email || !email.includes('@')){
+    status.textContent = 'Please enter a valid email address.';
+    return;
+  }
+  status.textContent = 'Preparing your curriculum…';
+  const link = document.createElement('a');
+  link.href = 'interactv-creative-coding-curriculum.pdf';
+  link.download = 'interactv-creative-coding-curriculum.pdf';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  status.textContent = 'Your curriculum download should start now.';
+});
+</script>
+
+<script>
+const c=document.getElementById('canvas'),ctx=c.getContext('2d');
+const state={scale:24,spacing:60,rotation:0,shape:'circle',pattern:'grid'};
+function resize(){const r=c.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);c.width=r.width*d;c.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);draw()}
+function polygon(n,r,off=0){ctx.beginPath();for(let i=0;i<n;i++){let a=off+i*Math.PI*2/n,x=Math.cos(a)*r,y=Math.sin(a)*r;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath();ctx.fill()}
+function shape(x,y,r,s,rot){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.fillStyle='#3550ff';if(s==='circle'){ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill()}else if(s==='square'){ctx.fillRect(-r,-r,r*2,r*2)}else if(s==='triangle')polygon(3,r,-Math.PI/2);else polygon(6,r,0);ctx.restore()}
+function draw(){let w=c.clientWidth,h=c.clientHeight;ctx.fillStyle='#f5f6fb';ctx.fillRect(0,0,w,h);let rot=state.rotation*Math.PI/180;
+if(state.pattern==='radial'){let cx=w/2,cy=h/2;for(let a=0;a<Math.PI*2;a+=state.spacing/180){let rr=30;for(let j=0;j<7;j++){let x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr;shape(x,y,state.scale,state.shape,rot+a);rr+=state.spacing/2}}}
+else{let cols=Math.ceil(w/state.spacing)+1,rows=Math.ceil(h/state.spacing)+1;for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){let xx=x*state.spacing+(state.pattern==='diagonal'?y*state.spacing*.5:0),yy=y*state.spacing*.95;shape(xx,yy,state.scale,state.shape,rot)}}}
+['scale','spacing','rotation'].forEach(k=>document.getElementById(k).addEventListener('input',e=>{state[k]=+e.target.value;document.getElementById(k+'Out').textContent=k==='rotation'?state[k]+'°':state[k];document.getElementById('code'+k[0].toUpperCase()+k.slice(1)).textContent=state[k];draw()}));
+document.querySelectorAll('[data-shape]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-shape]').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.shape=b.dataset.shape;document.getElementById('codeShape').textContent='"'+state.shape+'"';draw()}));
+document.querySelectorAll('[data-pattern]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-pattern]').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.pattern=b.dataset.pattern;draw()}));
+addEventListener('resize',resize);resize();
+</script>
+</body>
+</html>
